@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darwin y Adriana</title>
+  <link href="https://unpkg.com/nanogallery2@3.0.5/dist/css/nanogallery2.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: url(https://png.pngtree.com/background/20250107/original/pngtree-elegant-soft-blue-wedding-invitation-design-picture-image_16110779.jpg) fixed;
+    background-size: inherit;
+    padding: 20px;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    }
+    .content-wrapper {
+      background-color: rgb(255 255 255 / 51%);
+      max-width: 80%; /* Más estrecho para mejor scroll vertical */
+      margin: 20px auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    }
+    h2 {
+      text-align: center;
+      color: #8b5a5a;
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      font-family: 'Playfair Display', serif;
+      text-shadow: 1px 1px 4px black;
+    }
+    /* Estilo solo para la primera foto */
+    #nanogallery2 .nanoGalleryThumbnail[data-id="0"] {
+      width: 100% !important;
+      height: 400px !important;
+      margin-bottom: 20px;
+    }
+    /* Miniaturas normales */
+    #nanogallery2 .nanoGalleryThumbnail {
+      width: 300px !important;
+      height: 300px !important;
+      display: inline-block;
+      margin: 5px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="content-wrapper">
+    <h2>Nuestra Boda 26-Abril-2025</h2>
+    <div id="nanogallery2"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/nanogallery2@3.0.5/dist/jquery.nanogallery2.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      const cantidadFotos = 354;
+      const items = [];
+      
+      for (let i = 0; i <= cantidadFotos; i++) {
+        items.push({
+          id: i,  // ID único para cada foto
+          src: `fotos/web/full/foto_${i}.webp`,
+          srct: `fotos/web/thumbs/foto_${i}.webp`,
+          title: i==0? 'Nuestro dia' : `Foto ${i}`
+        });
+      }
+
+      $("#nanogallery2").nanogallery2({
+        items: items,
+        thumbnailHeight: 300,
+        thumbnailWidth: 300,
+        
+        // Configuración para scroll vertical
+        galleryDisplayMode: "rows",
+        galleryMaxRows: Infinity,  // Sin límite de filas
+        
+        // Solo la primera foto en tamaño especial
+        galleryMosaic: [
+        { w: 3, h: 3, c: 1, r: 1, id: 0 } ,
+          { w: 1, h: 1, c: 4, r: 1 }, 
+          { w: 1, h: 1, c: 5, r: 1 },
+          { w: 1, h: 1, c: 6, r: 1 },
+          { w: 1, h: 1, c: 7, r: 1 },
+          { w: 1, h: 1, c: 8, r: 1 },
+
+          { w: 1, h: 1, c: 4, r: 2 }, 
+          { w: 1, h: 1, c: 5, r: 2 },
+          { w: 1, h: 1, c: 6, r: 2 },
+          { w: 1, h: 1, c: 7, r: 2 },
+          { w: 1, h: 1, c: 8, r: 2 },
+
+          { w: 1, h: 1, c: 4, r: 3 }, 
+          { w: 1, h: 1, c: 5, r: 3 },
+          { w: 1, h: 1, c: 6, r: 3 },
+          { w: 1, h: 1, c: 7, r: 3 },
+          { w: 1, h: 1, c: 8, r: 3 },
+
+          { w: 1, h: 1, c: 1, r: 4 }, 
+          { w: 1, h: 1, c: 2, r: 4 },
+          { w: 1, h: 1, c: 3, r: 4 }, 
+          { w: 1, h: 1, c: 4, r: 4 },
+          { w: 1, h: 1, c: 5, r: 4 }, 
+          { w: 1, h: 1, c: 6, r: 4 },
+          { w: 1, h: 1, c: 7, r: 4 }, 
+          { w: 1, h: 1, c: 8, r: 4 },
+           
+        ],
+        galleryMosaicDynamic: true,
+        
+        // Lightbox con miniaturas
+        viewerGallery: 'thumbnails',
+        viewerTransition: 'fade',
+        
+        // Efectos
+        thumbnailHoverEffect2: "scale120",
+        
+        // Tema minimalista
+        galleryTheme: {
+          thumbnail: {
+            background: "#fff",
+            borderColor: "#e0e0e0"
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
