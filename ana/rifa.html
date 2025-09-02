@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Participantes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+   /*    background-image: url("img/fondo.jpg"); 
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;*/
+    }
+    .numero {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .numero:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen flex flex-col items-center p-6">
+  
+  <!-- Encabezado con logo -->
+  <div class="flex items-center gap-3 mb-6">
+    <img src="img/logo.png" alt="Logo" class="h-12 w-12 object-contain">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Lista de Participantes</h1>
+  </div>
+  
+  <!-- Grilla adaptable -->
+  <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
+
+  <script>
+    // Participantes vendidos (numero: nombre)
+    const participantes = {
+  "0": "Maykel Aburto",
+  "1": "Kathy Aburto",
+  "2": "Olga Matus",
+  "3": "Salomón Guido",
+  "4": "Kathy Aburto",
+  "5": "Míriam Páramo",
+  "6": "Yelba García",
+  "7": "Daniela Contreras",
+  "8": "Daniela Contreras",
+  "9": "Yelba García",
+  "10": "Daniela Contreras",
+  "11": "Xaviera Contreras",
+  "12": "Eskeyling Martinez",
+  "13": "Fabiola Campos",
+  "14": "Jessica Ruis",
+  "15": "Danna Campos",
+  "16": "Elieth Ampié",
+  "17": "Elieth Ampié",
+  "18": "Francela García",
+  "19": "Logan A. Chavez",
+  "20": "Leonor Aburto",
+  "21": "Samantha Alvarado",
+  "22": "Alzira García",
+  "23": "Míriam Páramo",
+  "24": "Cesar Villavicencio",
+  "25": "Manuela Zambrana",
+  "26": "Estéfany Jiménez",
+  "27": "Eskeyling Martinez",
+  "28": "Nataly Moreno",
+  "29": "Maria Lara",
+  "30": "Saleska Guido",
+  "31": "Estéfany Jiménez",
+  "32": "Kenia Mayorga",
+  "33": "Marcelo A. Chavez",
+  "34": "Leonor Aburto",
+  "35": "Erick Dávila",
+  "36": "Violeta Soza",
+  "37": "Karen Gallegos",
+  "38": null,
+  "39": "Nazareth Oporta",
+  "40": null,
+  "41": null,
+  "42": "Guadalupe Aburto",
+  "43": null,
+  "44": null,
+  "45": null,
+  "46": "Kenia Ureña",
+  "47": "Francisco A. Meza",
+  "48": null,
+  "49": null,
+  "50": null,
+  "51": "Nazareth Oporta",
+  "52": null,
+  "53": null,
+  "54": "Carmen Guzman",
+  "55": null,
+  "56": null,
+  "57": "Marlen Avilez",
+  "58": null,
+  "59": "Cesar Villavicencio",
+  "60": "Jennifer Alvarez",
+  "61": null,
+  "62": null,
+  "63": null,
+  "64": "Kenia Ureña",
+  "65": null,
+  "66": "Alma Guevara",
+  "67": null,
+  "68": null,
+  "69": null,
+  "70": null,
+  "71": "Nazareth Oporta",
+  "72": "Eskeyling Martinez",
+  "73": null,
+  "74": null,
+  "75": null,
+  "76": null,
+  "77": "Mario Villavicencio",
+  "78": null,
+  "79": null,
+  "80": "Jessica Ruis",
+  "81": null,
+  "82": "Rolando Roman",
+  "83": "Guadalupe Aburto",
+  "84": "Taidy López",
+  "85": null,
+  "86": "Hilda Carvajal",
+  "87": "Carmen Guzman",
+  "88": "Nataly Moreno",
+  "89": null,
+  "90": "Kenia Ureña",
+  "91": null,
+  "92": "Nazareth Oporta",
+  "93": "Iris López",
+  "94": "Sara Reyes",
+  "95": "Violeta Soza",
+  "96": "Karen Gallegos",
+  "97": "Nereyda Pérez",
+  "98": "Darling Vado",
+  "99": "Thelma Chavez"
+
+    };
+
+    const grid = document.getElementById("grid");
+
+    for (let i = 1; i <= 100; i++) {
+      const container = document.createElement("div");
+      container.classList.add("flex", "flex-col", "items-center", "justify-center", "p-2", "rounded-xl", "numero", "bg-white/70", "backdrop-blur");
+
+      // Formato de dos cifras
+      const numTexto = i.toString().padStart(2, "0");
+
+      const numberBox = document.createElement("div");
+      numberBox.textContent = numTexto;
+      numberBox.classList.add("h-14", "w-14", "flex", "items-center", "justify-center", "rounded-xl", "font-bold", "text-lg");
+
+      const label = document.createElement("span");
+      label.classList.add("mt-1", "text-[10px]", "sm:text-xs", "font-medium", "text-center");
+
+      if (participantes[i]) {
+        // Estilo para vendidos → Azul
+        numberBox.classList.add("bg-blue-500", "text-white", "line-through");
+        container.setAttribute("title", "Número vendido");
+
+        label.textContent = participantes[i];
+        label.classList.add("text-gray-800");
+      } else {
+        // Estilo para disponibles → Gris
+        numberBox.classList.add("bg-gray-400", "text-white");
+        container.setAttribute("title", "Número disponible");
+
+        label.textContent = "Disponible";
+        label.classList.add("text-gray-600");
+      }
+
+      container.appendChild(numberBox);
+      container.appendChild(label);
+      grid.appendChild(container);
+    }
+  </script>
+</body>
+</html>
