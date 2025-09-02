@@ -6,6 +6,51 @@
   <title>Lista de Participantes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+  .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
     body {
         background-color: #ffd4f8 !important;
    /*    background-image: url("img/fondo.jpg"); 
@@ -21,19 +66,33 @@
       transform: scale(1.05);
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+    span#lbl {
+    font-weight: bold;
+    color: blue;
+    /* margin-top: 4px !important;
+   position: absolute;*/
+}
   </style>
 </head>
 <body class="bg-gray-200 min-h-screen flex flex-col items-center p-6">
-  
+
   <!-- Encabezado con logo -->
   <div class="flex items-center gap-3 mb-6">
     <img src="img/logo.png" alt="Logo" class="h-12 w-12 object-contain">
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Lista de Participantes</h1>
+    <label id="switchLabel">
+  <span class="switch">
+    <input type="checkbox" id="mySwitch">
+    <span class="slider"></span>
+  </span>
+  <span id="lbl">Todos</span>
+</label>
   </div>
   
   <!-- Grilla adaptable -->
   <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
-
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
     // Participantes vendidos (numero: nombre)
     const participantes = {
@@ -141,6 +200,19 @@
     };
 
     const grid = document.getElementById("grid");
+const mySwitch = document.getElementById('mySwitch');
+const switchLabel = document.getElementById('switchLabel');
+mySwitch.addEventListener('change', function() {
+  if (this.checked) {
+    $('#lbl').text('Disponibles');
+    $('.bg-blue-500').parent().hide();
+   // console.log('Disponibles');
+  } else {
+   $('#lbl').text('Todos');
+   $('.bg-blue-500').parent().show();
+   // console.log('Todos');
+  }
+});
 
     for (let i = 0; i <= 99; i++) {
       const container = document.createElement("div");
