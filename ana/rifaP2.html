@@ -113,7 +113,7 @@
         container.addEventListener("click", () => {
           clickCount++;
           setTimeout(() => { clickCount = 0; }, 600);
-          if ($('#clave').checked && (clickCount === 3 || clickCount === 4)) {
+          if (document.getElementById("clave").checked && (clickCount === 3 || clickCount === 4)) {
             abrirModalEdicion(i);
             clickCount = 0;
           }
