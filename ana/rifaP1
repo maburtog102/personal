@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Participantes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin-right: 10px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #4CAF50; }
+    input:checked + .slider:before { transform: translateX(26px); }
+    body { background-color: #ffd4f8 !important; }
+    .numero { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .numero:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    span#lbl { font-weight: bold; color: blue; }
+    .modal { display: none; }
+  </style>
+</head>
+<body class="bg-gray-200 min-h-screen flex flex-col items-center p-6">
+
+  <!-- Texto promocional -->
+  <p class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 text-center">
+    Grandiosa rifa de un organizador multi usos en apoyo a la candidata a reyna del 3 grado "Academia Santa María - Jinotepe", a efectuarse el <span class="font-bold">14 de octubre</span> 
+    con los últimos dos dígitos de la Lotería Nacional de Nicaragua
+  </p>
+
+  <!-- Encabezado -->
+  <div class="flex items-center gap-3 mb-6">
+    <img src="img/mini.png" alt="Premio" class="h-12 w-12 object-cover cursor-pointer rounded shadow" id="thumbnail">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Lista de Participantes</h1>
+    <label id="switchLabel">
+      <span class="switch">
+        <input type="checkbox" id="mySwitch">
+        <span class="slider"></span>
+      </span>
+      <span id="lbl">Todos</span>
+    </label>
+  </div>
+
+  <!-- Modal premio -->
+  <div id="modalPremio" class="fixed inset-0 hidden bg-black bg-opacity-70 justify-center items-center z-50">
+    <span class="absolute top-5 right-8 text-white text-3xl cursor-pointer" id="closePremio">&times;</span>
+    <img src="img/premioA.png" alt="Premio Grande" class="max-w-[90%] max-h-[80%] rounded-xl shadow-2xl">
+  </div>
+
+  <!-- Modal edición -->
+  <div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-50 justify-center items-center z-50">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96">
+      <h2 class="text-xl font-bold mb-4">Editar participante</h2>
+      <p class="mb-2 text-gray-600">Número: <span id="editNumero" class="font-bold"></span></p>
+      <input type="text" id="editNombre" class="w-full p-2 border rounded-lg mb-4" placeholder="Nombre del participante">
+      <div class="flex justify-end gap-2">
+        <button id="cancelarBtn" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+        <button id="guardarBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg">Guardar</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Grilla -->
+  <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
+
+  <script>
+    const API_URL = "http://localhost:3000/api/participantes"; // ⚠️ cambia por tu URL ngrok
+    let participantes = {};
+    let numeroActual = null;
+
+    async function cargarParticipantes() {
+      const res = await fetch(API_URL);
+      participantes = await res.json();
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      for (let i = 0; i <= 99; i++) {
+        const container = document.createElement("div");
+        container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur");
+
+        const numTexto = i.toString().padStart(2,"0");
+        const numberBox = document.createElement("div");
+        numberBox.textContent = numTexto;
+        numberBox.classList.add("h-14","w-14","flex","items-center","justify-center","rounded-xl","font-bold","text-lg");
+
+        const label = document.createElement("span");
+        label.classList.add("mt-1","text-[10px]","sm:text-xs","font-medium","text-center");
+
+        if (participantes[i]) {
+          numberBox.classList.add("bg-blue-500","text-white","line-through");
+          container.setAttribute("title","Número vendido");
+          label.textContent = participantes[i];
+          label.classList.add("text-gray-800");
+        } else {
+          numberBox.classList.add("bg-gray-400","text-white");
+          container.setAttribute("title","Número disponible");
+          label.textContent = "Disponible";
+          label.classList.add("text-gray-600");
+        }
+
+        // triple click (PC) o 4 taps (móvil)
+        let clickCount = 0;
+        container.addEventListener("click", () => {
+          clickCount++;
+          setTimeout(() => { clickCount = 0; }, 600);
+          if (clickCount === 3 || clickCount === 4) {
+            abrirModalEdicion(i);
+            clickCount = 0;
+          }
+        });
+
+        container.appendChild(numberBox);
+        container.appendChild(label);
+        grid.appendChild(container);
+      }
+    }
+
+    function abrirModalEdicion(id) {
+      numeroActual = id;
+      document.getElementById("editNumero").textContent = id.toString().padStart(2,"0");
+      document.getElementById("editNombre").value = participantes[id] || "";
+      document.getElementById("editModal").style.display = "flex";
+    }
+
+    async function guardarEdicion() {
+      const nuevo = document.getElementById("editNombre").value.trim();
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: numeroActual, nombre: nuevo })
+      });
+      document.getElementById("editModal").style.display = "none";
+      await cargarParticipantes();
+    }
+
+    // Botones modal edición
+    document.getElementById("guardarBtn").addEventListener("click", guardarEdicion);
+    document.getElementById("cancelarBtn").addEventListener("click", () => {
+      document.getElementById("editModal").style.display = "none";
+    });
+
+    // Switch toggle
+    document.getElementById("mySwitch").addEventListener("change", function() {
+      if (this.checked) {
+        document.getElementById("lbl").textContent = "Disponibles";
+        document.querySelectorAll(".bg-blue-500").forEach(el => el.parentElement.style.display = "none");
+      } else {
+        document.getElementById("lbl").textContent = "Todos";
+        document.querySelectorAll(".bg-blue-500").forEach(el => el.parentElement.style.display = "flex");
+      }
+    });
+
+    // Modal premio
+    document.getElementById("thumbnail").onclick = () => {
+      document.getElementById("modalPremio").style.display = "flex";
+    };
+    document.getElementById("closePremio").onclick = () => {
+      document.getElementById("modalPremio").style.display = "none";
+    };
+    document.getElementById("modalPremio").onclick = (e) => {
+      if (e.target.id === "modalPremio") document.getElementById("modalPremio").style.display = "none";
+    };
+
+    // Inicial
+    cargarParticipantes();
+  </script>
+</body>
+</html>
