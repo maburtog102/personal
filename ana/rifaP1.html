@@ -128,7 +128,7 @@
 
     async function guardarEdicion() {
       const nuevo = document.getElementById("editNombre").value.trim();
-      if(nuevo === "") return alert("El nombre no puede estar vacío");
+      //if(nuevo === "") return alert("El nombre no puede estar vacío");
       await fetch(`${NGROK_BASE}/${numeroActual}?rifa=${rifaActual}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
