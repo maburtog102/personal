@@ -85,7 +85,7 @@
   grid.innerHTML = "";
 
   // Verificar si hay participantes válidos
-  const tieneDatos = Object.keys(participantes).length > 0;
+  const tieneDatos = participantes &&  Object.keys(participantes).length > 0;
   if (!tieneDatos) {
     const mensaje = document.createElement("div");
     mensaje.textContent = "No se pudieron obtener los números";
