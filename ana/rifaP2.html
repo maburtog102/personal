@@ -80,50 +80,61 @@
       renderGrid();
     }
 
-    function renderGrid() {
-      const grid = document.getElementById("grid");
-      grid.innerHTML = "";
+   function renderGrid() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
 
-      for (let i = 0; i <= 99; i++) {
-        const container = document.createElement("div");
-        container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur");
+  // Verificar si hay participantes válidos
+  const tieneDatos = Object.keys(participantes).length > 0;
+  if (!tieneDatos) {
+    const mensaje = document.createElement("div");
+    mensaje.textContent = "No se pudieron obtener los números";
+    mensaje.classList.add("col-span-full", "text-center", "text-red-600", "font-bold", "text-lg", "p-4");
+    grid.appendChild(mensaje);
+    return;
+  }
 
-        const numTexto = i.toString().padStart(2,"0");
-        const numberBox = document.createElement("div");
-        numberBox.textContent = numTexto;
-        numberBox.classList.add("h-14","w-14","flex","items-center","justify-center","rounded-xl","font-bold","text-lg");
+  for (let i = 0; i <= 99; i++) {
+    const container = document.createElement("div");
+    container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur");
 
-        const label = document.createElement("span");
-        label.classList.add("mt-1","text-[10px]","sm:text-xs","font-medium","text-center");
+    const numTexto = i.toString().padStart(2,"0");
+    const numberBox = document.createElement("div");
+    numberBox.textContent = numTexto;
+    numberBox.classList.add("h-14","w-14","flex","items-center","justify-center","rounded-xl","font-bold","text-lg");
 
-        if (participantes[i]) {
-          numberBox.classList.add("bg-blue-500","text-white","line-through");
-          container.setAttribute("title","Número vendido");
-          label.textContent = participantes[i];
-          label.classList.add("text-gray-800");
-        } else {
-          numberBox.classList.add("bg-gray-400","text-white");
-          container.setAttribute("title","Número disponible");
-          label.textContent = "Disponible";
-          label.classList.add("text-gray-600");
-        }
+    const label = document.createElement("span");
+    label.classList.add("mt-1","text-[10px]","sm:text-xs","font-medium","text-center");
 
-        // triple click (PC) o 4 taps (móvil)
-        let clickCount = 0;
-        container.addEventListener("click", () => {
-          clickCount++;
-          setTimeout(() => { clickCount = 0; }, 600);
-          if (document.getElementById("clave").checked && (clickCount === 3 || clickCount === 4)) {
-            abrirModalEdicion(i);
-            clickCount = 0;
-          }
-        });
-
-        container.appendChild(numberBox);
-        container.appendChild(label);
-        grid.appendChild(container);
-      }
+    if (participantes[i]) {
+      numberBox.classList.add("bg-blue-500","text-white","line-through");
+      container.setAttribute("title","Número vendido");
+      label.textContent = participantes[i];
+      label.classList.add("text-gray-800");
+    } else {
+      numberBox.classList.add("bg-gray-400","text-white");
+      container.setAttribute("title","Número disponible");
+      label.textContent = "Disponible";
+      label.classList.add("text-gray-600");
     }
+
+    // triple click (PC) o 4 taps (móvil)
+    let clickCount = 0;
+    container.addEventListener("click", () => {
+      clickCount++;
+      setTimeout(() => { clickCount = 0; }, 600);
+      if (document.getElementById("clave").checked && (clickCount === 3 || clickCount === 4)) {
+        abrirModalEdicion(i);
+        clickCount = 0;
+      }
+    });
+
+    container.appendChild(numberBox);
+    container.appendChild(label);
+    grid.appendChild(container);
+  }
+}
+
 
     function abrirModalEdicion(id) {
       numeroActual = id;
