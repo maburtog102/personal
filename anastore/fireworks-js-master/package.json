@@ -1,0 +1,55 @@
+{
+  "name": "@fireworks-js/monorepo",
+  "version": "2.10.0",
+  "private": true,
+  "type": "module",
+  "description": "A simple fireworks library!",
+  "homepage": "https://fireworks.js.org",
+  "scripts": {
+    "dev": "turbo run dev --filter='./packages/*'",
+    "build": "turbo run build --filter='./packages/*'",
+    "dev:website": "turbo run dev --filter='./website'",
+    "build:website": "turbo run build --filter='./website'",
+    "dev:examples": "turbo run dev --filter='./examples/*'",
+    "build:examples": "turbo run build --filter='./examples/*'",
+    "format": "prettier --write --ignore-unknown **"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crashmax-dev/fireworks-js.git"
+  },
+  "keywords": [
+    "react",
+    "preact",
+    "solid",
+    "vue",
+    "angular",
+    "svelte",
+    "web-components",
+    "canvas",
+    "fireworks",
+    "animation"
+  ],
+  "author": {
+    "name": "Vitalij Ryndin",
+    "email": "sys@crashmax.ru",
+    "url": "https://crashmax.ru"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/crashmax-dev/fireworks-js/issues"
+  },
+  "packageManager": "pnpm@7.5.0",
+  "devDependencies": {
+    "@crashmax/prettier-config": "^2.1.0",
+    "@crashmax/tsconfig": "1.0.2",
+    "@types/node": "18.11.9",
+    "del-cli": "5.0.0",
+    "tsx": "3.11.0",
+    "turbo": "1.6.3",
+    "typescript": "4.8.4",
+    "vite": "3.2.2",
+    "vite-plugin-banner": "0.6.1",
+    "vite-plugin-dts": "1.6.6"
+  }
+}

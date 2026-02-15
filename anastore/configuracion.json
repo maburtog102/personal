@@ -1,0 +1,62 @@
+{
+        "fondo": {
+                "imagen": "",
+                "opacidad": 1
+        },
+        "botonIniciar": {
+                "color": "#ffffff",
+                "fondo": {
+                        "color": "#ff00bb",
+                        "opacidad": 1
+                },
+                "opacidad": 1,
+                "sombra": {
+                        "color": "#36ad20",
+                        "opacidad": 0.64
+                }
+        },
+        "botonDetener": {
+                "color": "#ffffff",
+                "fondo": {
+                        "color": "#ed4722",
+                        "opacidad": 1
+                },
+                "opacidad": 1,
+                "sombra": {
+                        "color": "#f18585",
+                        "opacidad": 0.64
+                }
+        },
+        "etiquetaDeteniendo": {
+                "visible": true,
+                "color": "#ff0000",
+                "opacidad": 1
+        },
+        "etiquetaGanador": {
+                "visible": true,
+                "colorPrincipal": "#b40e77",
+                "colorSecundario": "#ecfd08",
+                "fuente": {
+                        "familia": "",
+                        "tamano": 190
+                },
+                "opacidad": 1,
+                "sombra": {
+                        "color": "#ff0000",
+                        "opacidad": 1
+                }
+        },
+        "etiquetaDatosGanador": {
+                "color": "#ffffff",
+                "opacidad": 1,
+                "ancho": 35,
+                "fuente": {
+                        "familia": "",
+                        "tamano": 30
+                },
+                "fondo": {
+                        "color": "#ee00ff",
+                        "opacidad": 1
+                }
+        }
+}

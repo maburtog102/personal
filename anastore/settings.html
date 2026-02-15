@@ -1,0 +1,745 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>jQuery Countdown timer</title>
+    <link rel="stylesheet" href="css/example.css" type="text/css" />
+    <link rel="stylesheet" href="css/jquery.countdown.timer.css" type="text/css" />
+    <link rel="stylesheet" href="css/ganador2.css" type="text/css" />
+    <link type="text/css" rel="stylesheet" href="css/jquery.jConveyorTicker.css" />
+    <link type="text/css" rel="stylesheet" href="css/demo-styles.css" />
+    <link href="Plugins/fa-6.2.1-web/css/all.css" rel="stylesheet" />
+    <link href="Plugins/DataTables/Buttons-2.3.3/css/buttons.foundation.css" rel="stylesheet" />
+    <link href="Plugins/bootstrap-toasts-manager/dist/toast.min.css" rel="stylesheet" />
+    <link href="Plugins/bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="Plugins/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet" />
+    <link href="Plugins/Popover/css/hunterPopup.css" rel="stylesheet" />
+    <link href="Plugins/jsonform-master/deps/opt/spectrum.css" rel="stylesheet" />
+ <style>
+
+ #btnDeteniendo, #btnPlay, #btnStop,::after, ::before {
+    box-sizing: unset;
+}
+   #BackFondo{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0px auto;
+    left: 0;
+    top: -20px;
+    z-index: -100;
+    opacity: 0.6;
+}
+
+div#InfoGanador {
+    box-shadow: inset 0px 5px 10px 2px rgb(0 0 0 / 30%);
+    background-color: #fff;
+    border: 5px #fff solid;
+    height: 35px;
+    position: absolute;
+    margin-top: -60px;
+    overflow-x: hidden;
+    width: -webkit-fill-available;
+    overflow-y: inherit;
+}
+div#InfoGanador span {
+font-size: 30px;
+color: blue;
+font-weight: bold;
+font-family: monospace;
+position: absolute;
+    width: max-content;
+}
+#centered_div{
+  /*opacity: 0.5 !important;*/
+}
+
+#settingsDiv{
+  position: absolute;
+    height: 300px;
+    width: 450px;
+    background-color: #0c0238;
+    top: 100%;
+    margin-top: -300px;
+    z-index: 999999;
+}
+#settingsDiv .nav-item{
+font-size: 12px !important;
+}
+#settingsDiv .nav-link {
+
+    color: #fafcff;
+
+}
+#btnStop, #btnPlay {
+      min-width: unset;
+     min-height: unset;
+     height: 35px;
+    width: 268px;
+}
+#settingsDiv .nav-link:focus {
+color: #0c0238 !important;
+}
+#settingsDiv .nav-link.active {
+    color: #0c0238;
+}
+
+#InfoGanador  {
+    box-sizing: unset;
+}
+#searchclear{
+  cursor: pointer;
+  width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+}
+
+.tab-pane{
+
+  width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+::selection {
+    color: #fff;
+    background: #0c0238;
+}
+
+#divSave{
+    position: absolute;
+    z-index: 999999999999999;
+    /* left: 91%; */
+    clear: both;
+    top: 100%;
+    margin-top: -346px;
+    background-color: #0c0238;
+    width: 132px;
+    height: 47px;
+    padding: 2px;
+    /* margin-bottom: 27px; */
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 5px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+    <div class="Winwrapper showhide" id="Winwrapper" style="position: absolute; top: 23px; display: none;">
+        <span>G</span>
+        <span>A</span>
+        <span>N</span>
+        <span>A</span>
+        <span>D</span>
+        <span>O</span>
+        <span>R</span>
+      </div>
+      <div id="InfoGanador" style="display: none;" class="js-conveyor-1 showhide" >
+
+        <span style="margin-top: -6px !important;">La información del ganador se muestra en esta cinta, nombre, telefono, entre otros datos que se obtengan</span>
+
+      </div>
+    <button id="btnPlay" style="display: none;" class="button btnAcc showhide">Iniciar</button>
+    <button  id="btnStop" class="buttonStop btnAcc showhide">Detener</button>
+    <button id="btnDeteniendo" class="btn-det showhide"><span>Deteniendo...</span></button>
+
+    <div id="centered_div">
+
+        <div id="counter">
+
+        </div>
+
+    </div>
+
+    <select hidden style="position:  absolute;top: 20px;left: 20px;height: 23px;width: 200px;" id="easing"></select><br />
+
+    <img id="BackFondo" alt="" src="https://scontent.fmga3-2.fna.fbcdn.net/v/t31.18172-8/1401258_1023161444376518_8528490961743280785_o.jpg?_nc_cat=105&ccb=1-7&_nc_sid=9267fe&_nc_ohc=Y9PaoBkWf7wAX8zBQ6u&_nc_ht=scontent.fmga3-2.fna&oh=00_AfAJVLsLFc1aZD57UbRepZru1LuN_yQMjVzump9_VM9fBA&oe=63CD6827"/>
+
+
+    <script src="js/jquery-3.6.1.min.js"></script>
+	<script src="js/jquery.easing.js"></script>
+    <script src="js/jquery.timeout.interval.idle.js" type="text/javascript"></script>
+    <script src="js/jquery.countdown.counter.js" type="text/javascript"></script>
+    <script src="js/jquery.jConveyorTicker.js"></script>
+    <script src="Plugins/DataTables/datatables.js"></script>
+    <script src="Plugins/DataTables/FixedColumns-4.2.1/js/dataTables.fixedColumns.js"></script>
+    <script src="Plugins/blockUI/jquery.blockUI.js"></script>
+    <script src="Plugins/DataTables/RowGroup-1.3.0/js/dataTables.rowGroup.js"></script>
+    <script src="Plugins/DataTables/Buttons-2.3.3/js/buttons.bootstrap.js"></script>
+    <script src="Plugins/Bootstrap-Multiselect/dist/js/bootstrap-multiselect.js"></script>
+    <script src="Plugins/bootstrap-toasts-manager/dist/toast.min.js"></script>
+    <script src="Plugins/bootstrap-5.0.2-dist/js/bootstrap.bundle.js"></script>
+    <script src="Plugins/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
+    <script type="text/javascript">
+        const hex2rgb = (hex) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    // return {r, g, b}
+    return { r, g, b };
+}
+const hex2rgbStr = (hex, opacity) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+
+    // return {r, g, b}
+    return `rgb(${r} ,${g} ,${b},${opacity})`;
+}
+         window.Digitos=10;
+        window.Procesando=[];
+        window.Relojes=[];
+        window.Corriendo = false;
+        window.Deteniendo = false;
+        window.Detenidos = 0;
+        window.UserStop=false;
+        function AnimateWinner()
+        {
+
+            var texto=$('#InfoGanador span').text()
+$('#InfoGanador span').text(texto + '          ' + texto)
+var w1=$('#InfoGanador').css('width').replace('px','');
+var w2=$('#InfoGanador span').css('width').replace('px','');
+var dif=(parseInt(w2)-parseInt(w1))*(-1)
+
+
+$('#InfoGanador span').animate({
+'margin-left': dif+'px'
+},20000,'linear',function(){
+    $('#InfoGanador span').text(texto).css('margin-left', primerDiff+'px')
+    if(window.MostrandoGanador)
+    AnimateWinner();
+})
+}
+
+
+var primerDiff=0;
+        $(document).ready(function(){
+            $('#BackFondo').hover(function(){
+            $('#settingsDiv').css('opacity',0.3);
+            $('#divSave').css('opacity',0.3);
+        }, function(){
+            $('#settingsDiv').css('opacity',1);
+            $('#divSave').css('opacity',1);
+        });
+
+        /***********************************/
+        SetPropFondo();
+        SetPropBotonIniciar();
+        SetPropBotonDetener();
+        SetPropEtiquetaDeteniendo();
+        SetPropTextoGanador();
+        SetPropInfoGanador();
+         /***********************************/
+
+            AplicarEstilos();
+
+            $('#settingsDiv .nav-link').click(function(){
+              $('.showhide').hide();
+            var el=$(this).attr('quien');
+              $(el).show();
+
+              if(el=='#InfoGanador')    AnimateWinner();
+            });
+
+            // Moved and updated this from the original global scope to SetPropFondo
+            // Original: $('#searchinputFondo').off().on("change paste keyup search", function () {
+            // $('#BackFondo').attr('src',$(this).val());
+            // });
+
+
+            // Event listeners for .control-json elements using jQuery
+            $('.control-json').on('input change', generateJSON);
+
+
+ Centrar();
+ reset();
+
+});
+
+window.onresize = function() {
+    Centrar();
+};
+
+function SetPropFondo(){
+  $('#searchclear').click(function(){
+    $(this).prev('input').val('').text(''); // Note: Ensure '#searchclear' and its 'prev('input')' exist in your HTML structure where intended.
+    $('#BackFondo').removeAttr('src');
+}) ;
+$('#fondoOpacity').off().change(function(){
+  $('#BackFondo').css('opacity',$(this).val()/100);
+});
+$('#colorFondo').off().change(function(){
+  $('#BackFondo').css('background-color',$(this).val() );
+});
+// Added handler for imagenFondo from original logic
+$('#imagenFondo').off().on("input", function () {
+      $('#BackFondo').attr('src', $(this).val());
+  });
+}
+function SetPropBotonIniciar(){
+
+}
+function SetPropBotonDetener(){
+
+}
+function SetPropEtiquetaDeteniendo(){
+
+}
+function SetPropTextoGanador(){
+
+}
+function SetPropInfoGanador(){
+
+}
+
+function reset(){
+    $('#Winwrapper').hide();
+    $('#InfoGanador').hide();
+    window.MostrandoGanador=false;
+    window.Detenidos = 0;
+    window.Corriendo =false;
+    window.Deteniendo =false;
+    window.UserStop=false;
+    window.Relojes.forEach(function(reloj, index) {
+        reloj.cancelado=true;
+            });
+
+    Procesando.forEach(function(tarea, index) {
+                clearInterval(tarea);
+            });
+            Procesando = [];
+    $('.counter_item').remove();
+    for(var i= 0 ; i< window.Digitos; i++)
+{
+    var plantilla = `<div id="counter_item_${i}" class="counter_item"><div class="front"></div><div class="digit digit0"></div></div>`;
+     $('#counter').append($(plantilla));
+
+
+    // $('#counter').find(`#counter_item_${i}`).CounterInit(1,stopIn,generateRandom(600,1100));
+
+}
+}
+function getHeight() {
+  return $(document).height(); // Simplified to use jQuery
+}
+
+function ObtenerDeLocalODB(){
+return undefined;
+
+}
+function AplicarEstilos(obj){
+  var parametros = obj;
+  if(!parametros)
+{ 
+    parametros = ObtenerDeLocalODB(); //si no hay datos tomarlos por defecto
+  if(!parametros) parametros=DefaultPars();
+  
+}
+InyectarEstilo(parametros);
+  aplicarValoresDesdeConfig(parametros);
+}
+
+function InyectarEstilo(parametros){
+
+    var tag = `
+  #btnPlay{
+    color: ${parametros.botonIniciar.color} !important;
+    opacity: ${parametros.botonIniciar.opacidad} !important;
+    background: ${hex2rgbStr(parametros.botonIniciar.fondo.color,parametros.botonIniciar.fondo.opacidad)} !important;
+    box-shadow: 12px 12px 24px ${hex2rgbStr(parametros.botonIniciar.fondo.color,parametros.botonIniciar.sombra.opacidad)} !important;
+  }
+  #btnPlay::before ,  #btnPlay::after{
+    border: 6px solid ${hex2rgbStr(parametros.botonIniciar.fondo.color,0.5)};
+    box-shadow: 0 0 60px ${hex2rgbStr(parametros.botonIniciar.fondo.color,0.5)};
+}
+  #btnStop{
+    color: ${parametros.botonDetener.color} !important;
+    opacity: ${parametros.botonDetener.opacidad} !important;
+    background: ${hex2rgbStr(parametros.botonDetener.fondo.color,parametros.botonDetener.fondo.opacidad)} !important;
+    box-shadow: 12px 12px 24px ${hex2rgbStr(parametros.botonDetener.fondo.color,parametros.botonDetener.sombra.opacidad)} !important;
+  }
+  #btnDeteniendo{
+   /* display: ${parametros.etiquetaDeteniendo.visible? 'inline-block': 'none'} !important; */
+    color:${parametros.etiquetaDeteniendo.color} !important;
+    opacity: ${parametros.etiquetaDeteniendo.opacidad} !important;
+  }
+    #btnDeteniendo::after{
+    background: linear-gradient(to top, transparent, ${parametros.etiquetaDeteniendo.color}) !important;
+  }
+   #btnDeteniendo::before  {
+    background: linear-gradient(to left, transparent, ${parametros.etiquetaDeteniendo.color}) !important;
+  }
+  #btnDeteniendo span:after{
+    background: linear-gradient(to right, transparent, ${parametros.etiquetaDeteniendo.color}) !important;
+ }
+ #btnDeteniendo span:before  {
+    background: linear-gradient(to bottom, transparent, ${parametros.etiquetaDeteniendo.color}) !important;
+ }
+
+  /*EtiquetaGanador*/
+  #Winwrapper{
+    /* display: ${parametros.etiquetaGanador.visible? 'block': 'none'} !important;  */
+    opacity: ${parametros.etiquetaGanador.opacidad} !important;
+  }
+  #Winwrapper span{
+    font-family: ${parametros.etiquetaGanador.fuente.familia} !important;
+    font-size: ${parametros.etiquetaGanador.fuente.tamano}px !important;
+    color: ${hex2rgbStr(parametros.etiquetaGanador.colorPrincipal,parametros.etiquetaGanador.opacidad)} !important;
+    text-shadow:    0 1px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)}, 0 2px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)} ,
+                    0 3px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)}, 0 4px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)} ,
+                    0 5px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)}, 0 6px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)} ,
+                    0 7px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)}, 0 8px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)} ,
+                    0 9px 0 ${hex2rgbStr(parametros.etiquetaGanador.colorSecundario,parametros.etiquetaGanador.opacidad)}, 0 10px 10px ${hex2rgbStr(parametros.etiquetaGanador.sombra.color,parametros.etiquetaGanador.sombra.opacidad)};
+  }
+  #InfoGanador{
+    background-color: ${hex2rgbStr(parametros.etiquetaDatosGanador.fondo.color,parametros.etiquetaDatosGanador.fondo.opacidad)}  !important;
+  }
+  #InfoGanador span{
+    font-size: ${parametros.etiquetaDatosGanador.fuente.tamano}px !important;
+    color: ${hex2rgbStr(parametros.etiquetaDatosGanador.color,parametros.etiquetaDatosGanador.opacidad)}  !important;
+    font-family: ${parametros.etiquetaDatosGanador.fuente.familia}  !important;
+   }
+  `;
+               $('#EstiloDinamico').remove();
+                $('<style id="EstiloDinamico">').prop("type", "text/css").html(tag).appendTo("head");
+}
+function Centrar(){
+  $('#settingsDiv').hide();
+    var h = Math.round( getHeight()/2) - 100;
+    $('#counter').css('margin-top',h);
+    $('#settingsDiv').show();
+}
+function generateRandom(min, max) {
+  return Math.floor(min + Math.random()*(max - min + 1))
+}
+
+function DefaultPars(){
+  return {
+        "fondo": {
+                "imagen":'',
+                "opacidad": 0.6,
+        },
+        "botonIniciar": {
+                "color":'#FFFFFF',
+                "fondo": {
+                        "color":'#36ad20',
+                        "opacidad": 1
+                },
+                "opacidad": 1,
+                "sombra": {
+                        "color":'#36ad20',
+                        "opacidad": 0.64
+                }
+        },
+        "botonDetener": {
+                "color":'#FFFFFF',
+                "fondo": {
+                        "color":'#ed4722',
+                        "opacidad": 1
+                },
+                "opacidad": 1,
+                "sombra": {
+                        "color":'#f18585',
+                        "opacidad": 0.64
+                }
+        },
+        "etiquetaDeteniendo": {
+                "visible": true,
+                "color":'#FF0000',
+                "opacidad": 1,
+        },
+        "etiquetaDatosGanador": {
+                "color":'#0000FF',
+                "opacidad": 1,
+                "ancho": 35, /*por cada unidad subir el margen*/
+        "fuente": {
+                "familia":'monospace',
+                "tamano": 30,
+        },
+                "fondo": {
+                        "color":'#FFFFFF',
+                        "opacidad": 1
+                }
+        },
+        "etiquetaGanador": {
+                "visible": true,
+                "fuente": {
+                        "familia":'"Luckiest Guy", cursive',
+                        "tamano": 80,
+                },
+                "opacidad": 1,
+                "colorPrincipal": '#20b50e',
+                "colorSecundario": '#f17e14',
+                "sombra": {
+                        "color":'#000000',
+                        "opacidad": 0.4
+                }
+        }
+}
+
+}
+     //   var init_With = 3;
+    //    $('#counter_item1').CounterInit(1000, 1);
+    //    $('#counter_item5').CounterInit(1000, init_With);
+     //    $('#counter_item6').CounterInit(1000, 8);
+      // var a= new CounterInit(1000, init_With ,$('#counter_item5'));
+      // var b= new CounterInit(1000, 6 ,$('#counter_item6'));
+
+      const config = {};
+
+  // Removed original:
+  // document.querySelectorAll('.control-json').forEach(control => {
+  //   control.addEventListener('input', generateJSON);
+  //   control.addEventListener('change', generateJSON);
+  // });
+  // This is now handled in $(document).ready()
+
+  function generateJSON() {
+    config.fondo = {
+      imagen: $('#imagenFondo').val(),
+      opacidad: parseFloat($('#fondoOpacity').val()) / 100
+    };
+
+    config.botonIniciar = {
+      color: $('#btnIniciarColor').val(),
+      fondo: {
+        color: $('#btnIniciarFondoColor').val(),
+        opacidad: parseFloat($('#btnIniciarFondoOpacidad').val())
+      },
+      opacidad: parseFloat($('#btnIniciarOpacidad').val()),
+      sombra: {
+        color: $('#btnIniciarSombraColor').val(),
+        opacidad: parseFloat($('#btnIniciarSombraOpacidad').val())
+      }
+    };
+
+    config.botonDetener = {
+      color: $('#btnDetenerColor').val(),
+      fondo: {
+        color: $('#btnDetenerFondoColor').val(),
+        opacidad: parseFloat($('#btnDetenerFondoOpacidad').val())
+      },
+      opacidad: parseFloat($('#btnDetenerOpacidad').val()),
+      sombra: {
+        color: $('#btnDetenerSombraColor').val(),
+        opacidad: parseFloat($('#btnDetenerSombraOpacidad').val())
+      }
+    };
+
+    config.etiquetaDeteniendo = {
+      visible: $('#deteniendoVisible').is(':checked'),
+      color: $('#deteniendoColor').val(),
+      opacidad: parseFloat($('#deteniendoOpacidad').val())
+    };
+
+    config.etiquetaGanador = {
+      visible: $('#ganadorVisible').is(':checked'),
+      colorPrincipal: $('#ganadorColorPrincipal').val(),
+      colorSecundario: $('#ganadorColorSecundario').val(),
+      fuente: {
+        familia: $('#ganadorFuente').val(),
+        tamano: parseInt($('#ganadorTamano').val())
+      },
+      opacidad: parseFloat($('#ganadorOpacidad').val()),
+      sombra: {
+        color: $('#ganadorSombraColor').val(),
+        opacidad: parseFloat($('#ganadorSombraOpacidad').val())
+      }
+    };
+
+    config.etiquetaDatosGanador = {
+      color: $('#infoColor').val(),
+      opacidad: parseFloat($('#infoOpacidad').val()),
+      ancho: parseInt($('#infoAncho').val()),
+      fuente: {
+        familia: $('#infoFuente').val(),
+        tamano: parseInt($('#infoTamano').val())
+      },
+      fondo: {
+        color: $('#infoFondoColor').val(),
+        opacidad: parseFloat($('#infoFondoOpacidad').val())
+      }
+    };
+
+    // Aquí puedes hacer lo que desees con el JSON `config`, como enviarlo por AJAX o almacenarlo
+    console.log(JSON.stringify(config, null, 2));
+    // When settings change, re-apply styles dynamically
+    var currentParams = AplicarEstilos(config); //This will re-read from controls and apply
+  }
+
+  function setValue(id, value) {
+    if (value !== undefined && value !== null) {
+      const $el = $("#" + id);
+      if ($el.length > 0) {
+        if ($el.is(":checkbox")) {
+          $el.prop("checked", value);
+        } else {
+          $el.val(value);
+        }
+      }
+    }
+  }
+
+ function aplicarValoresDesdeConfig(_config) {
+    // Fondo
+    setValue("imagenFondo", _config.fondo?.imagen);
+    setValue("fondoOpacity", _config.fondo?.opacidad * 100); // Convertir a porcentaje (0-100)
+    setValue("colorFondo", _config.fondo?.color); // Assuming 'color' was meant for 'colorFondo'
+
+    // Botón Iniciar
+    setValue("btnIniciarColor", _config.botonIniciar?.color);
+    setValue("btnIniciarFondoColor", _config.botonIniciar?.fondo?.color);
+    setValue("btnIniciarFondoOpacidad", _config.botonIniciar?.fondo?.opacidad);
+    setValue("btnIniciarOpacidad", _config.botonIniciar?.opacidad);
+    setValue("btnIniciarSombraColor", _config.botonIniciar?.sombra?.color);
+    setValue("btnIniciarSombraOpacidad", _config.botonIniciar?.sombra?.opacidad);
+
+    // Botón Detener
+    setValue("btnDetenerColor", _config.botonDetener?.color);
+    setValue("btnDetenerFondoColor", _config.botonDetener?.fondo?.color);
+    setValue("btnDetenerFondoOpacidad", _config.botonDetener?.fondo?.opacidad);
+    setValue("btnDetenerOpacidad", _config.botonDetener?.opacidad);
+    setValue("btnDetenerSombraColor", _config.botonDetener?.sombra?.color);
+    setValue("btnDetenerSombraOpacidad", _config.botonDetener?.sombra?.opacidad);
+
+    // Etiqueta Deteniendo
+    setValue("deteniendoVisible", _config.etiquetaDeteniendo?.visible);
+    setValue("deteniendoColor", _config.etiquetaDeteniendo?.color);
+    setValue("deteniendoOpacidad", _config.etiquetaDeteniendo?.opacidad);
+
+    // Etiqueta Datos Ganador
+    setValue("infoColor", _config.etiquetaDatosGanador?.color);
+    setValue("infoOpacidad", _config.etiquetaDatosGanador?.opacidad);
+    setValue("infoAncho", _config.etiquetaDatosGanador?.ancho);
+    setValue("infoFuente", _config.etiquetaDatosGanador?.fuente?.familia);
+    setValue("infoTamano", _config.etiquetaDatosGanador?.fuente?.tamano);
+    setValue("infoFondoColor", _config.etiquetaDatosGanador?.fondo?.color);
+    setValue("infoFondoOpacidad", _config.etiquetaDatosGanador?.fondo?.opacidad);
+
+    // Etiqueta Ganador
+    setValue("ganadorVisible", _config.etiquetaGanador?.visible);
+    setValue("ganadorFuente", _config.etiquetaGanador?.fuente?.familia);
+    setValue("ganadorTamano", _config.etiquetaGanador?.fuente?.tamano);
+    setValue("ganadorOpacidad", _config.etiquetaGanador?.opacidad);
+    setValue("ganadorColorPrincipal", _config.etiquetaGanador?.colorPrincipal);
+    setValue("ganadorColorSecundario", _config.etiquetaGanador?.colorSecundario);
+    setValue("ganadorSombraColor", _config.etiquetaGanador?.sombra?.color);
+    setValue("ganadorSombraOpacidad", _config.etiquetaGanador?.sombra?.opacidad);
+}
+    </script>
+
+     <div id="divSave" ><a class="btn btn-primary"><i class="fa fa-save"></i> Guardar</a></div>
+ <div id="settingsDiv" style="overflow: auto; padding: 2px; opacity: 1;">
+  <ul class="nav nav-tabs" id="myTab" role="tablist" style="width: max-content;">
+    <li class="nav-item" role="presentation">
+      <button quien="#Body" class="nav-link active" id="one-tab" data-bs-toggle="tab" data-bs-target="#one" type="button" role="tab" aria-controls="one" aria-selected="true">Fondo</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button quien="#btnPlay" class="nav-link" id="two-tab" data-bs-toggle="tab" data-bs-target="#two" type="button" role="tab" aria-controls="two" aria-selected="false">Botón Iniciar</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button quien="#btnStop" class="nav-link" id="three-tab" data-bs-toggle="tab" data-bs-target="#three" type="button" role="tab" aria-controls="three" aria-selected="false">Botón Detener</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button quien="#btnDeteniendo" class="nav-link" id="four-tab" data-bs-toggle="tab" data-bs-target="#four" type="button" role="tab" aria-controls="four" aria-selected="false">Etiqueta Deteniendo</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button quien="#Winwrapper" class="nav-link" id="five-tab" data-bs-toggle="tab" data-bs-target="#five" type="button" role="tab" aria-controls="five" aria-selected="false">Texto Ganador</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button quien="#InfoGanador" class="nav-link" id="six-tab" data-bs-toggle="tab" data-bs-target="#six" type="button" role="tab" aria-controls="six" aria-selected="false">Información Ganador</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent" style="position: fixed; padding: 5px; background-color: #fff; width: 449px; height: 238px;">
+    <div class="tab-pane fade active show" id="one" role="tabpanel" aria-labelledby="one-tab">
+      <label class="form-label">Opacidad</label>
+      <input type="range" min="0" max="100" id="fondoOpacity" class="form-range control-json">
+      <label class="form-label">Color de fondo</label>
+      <input type="color" id="colorFondo" class="form-control form-control-color control-json" value="#FFFFFF">
+      <label class="form-label">Imagen de fondo</label>
+      <input type="text" id="imagenFondo" class="form-control control-json">
+    </div>
+
+    <div class="tab-pane fade" id="two" role="tabpanel" aria-labelledby="two-tab">
+      <label>Color Texto</label>
+      <input type="color" id="btnIniciarColor" class="form-control control-json" value="#FFFFFF">
+      <label>Color Fondo</label>
+      <input type="color" id="btnIniciarFondoColor" class="form-control control-json" value="#36AD20">
+      <label>Opacidad Fondo</label>
+      <input type="range" min="0" max="1" step="0.01" id="btnIniciarFondoOpacidad" class="form-range control-json" value="1">
+      <label>Opacidad</label>
+      <input type="range" min="0" max="1" step="0.01" id="btnIniciarOpacidad" class="form-range control-json" value="1">
+      <label>Color Sombra</label>
+      <input type="color" id="btnIniciarSombraColor" class="form-control control-json" value="#36AD20">
+      <label>Opacidad Sombra</label>
+      <input type="range" min="0" max="1" step="0.01" id="btnIniciarSombraOpacidad" class="form-range control-json" value="0.64">
+    </div>
+
+    <div class="tab-pane fade" id="three" role="tabpanel" aria-labelledby="three-tab">
+      <label>Color Texto</label>
+      <input type="color" id="btnDetenerColor" class="form-control control-json" value="#FFFFFF">
+      <label>Color Fondo</label>
+      <input type="color" id="btnDetenerFondoColor" class="form-control control-json" value="#ED4722">
+      <label>Opacidad Fondo</label>
+      <input type="range" min="0" max="1" step="0.01" id="btnDetenerFondoOpacidad" class="form-range control-json" value="1">
+      <label>Opacidad</label>
+      <input type="range" min="0" max="1" step="0.01" id="btnDetenerOpacidad" class="form-range control-json" value="1">
+      <label>Color Sombra</label>
+      <input type="color" id="btnDetenerSombraColor" class="form-control control-json" value="#F18585">
+      <label>Opacidad Sombra</label>
+      <input type="range" min="0" max="1" step="0.01" id="btnDetenerSombraOpacidad" class="form-range control-json" value="0.64">
+    </div>
+
+    <div class="tab-pane fade" id="four" role="tabpanel" aria-labelledby="four-tab">
+      <label>Visible</label>
+      <input type="checkbox" id="deteniendoVisible" class="form-check-input control-json">
+      <label>Color</label>
+      <input type="color" id="deteniendoColor" class="form-control control-json" value="#FF0000">
+      <label>Opacidad</label>
+      <input type="range" min="0" max="1" step="0.01" id="deteniendoOpacidad" class="form-range control-json" value="1">
+    </div>
+
+    <div class="tab-pane fade" id="five" role="tabpanel" aria-labelledby="five-tab">
+      <label>Visible</label>
+      <input type="checkbox" id="ganadorVisible" class="form-check-input control-json">
+      <label>Color Principal</label>
+      <input type="color" id="ganadorColorPrincipal" class="form-control control-json" value="#20B50E">
+      <label>Color Secundario</label>
+      <input type="color" id="ganadorColorSecundario" class="form-control control-json" value="#F17E14">
+      <label>Fuente</label>
+      <input type="text" id="ganadorFuente" class="form-control control-json" value='"Luckiest Guy", cursive'>
+      <label>Tamaño Fuente</label>
+      <input type="number" id="ganadorTamano" class="form-control control-json" value="80">
+      <label>Opacidad</label>
+      <input type="range" min="0" max="1" step="0.01" id="ganadorOpacidad" class="form-range control-json" value="1">
+      <label>Color Sombra</label>
+      <input type="color" id="ganadorSombraColor" class="form-control control-json" value="#000000">
+      <label>Opacidad Sombra</label>
+      <input type="range" min="0" max="1" step="0.01" id="ganadorSombraOpacidad" class="form-range control-json" value="0.4">
+    </div>
+
+    <div class="tab-pane fade" id="six" role="tabpanel" aria-labelledby="six-tab">
+      <label>Color</label>
+      <input type="color" id="infoColor" class="form-control control-json" value="#0000FF">
+      <label>Opacidad</label>
+      <input type="range" min="0" max="1" step="0.01" id="infoOpacidad" class="form-range control-json" value="1">
+      <label>Ancho</label>
+      <input type="number" id="infoAncho" class="form-control control-json" value="35">
+      <label>Fuente</label>
+      <input type="text" id="infoFuente" class="form-control control-json" value="monospace">
+      <label>Tamaño Fuente</label>
+      <input type="number" id="infoTamano" class="form-control control-json" value="30">
+      <label>Color Fondo</label>
+      <input type="color" id="infoFondoColor" class="form-control control-json" value="#FFFFFF">
+      <label>Opacidad Fondo</label>
+      <input type="range" min="0" max="1" step="0.01" id="infoFondoOpacidad" class="form-range control-json" value="1">
+    </div>
+  </div>
+</div>
+  </body>
+</html>

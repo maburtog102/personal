@@ -1,0 +1,56 @@
+{
+        "parametros": {
+        "fondo": {
+                "imagen":'',
+                "opacidad": 0.6,
+        },
+        "botonIniciar": {
+                "color":'#36ad20',
+                "opacidad": 1,
+                "sombra": {
+                        "color":'#36ad20',
+                        "opacidad": 0.64
+                }
+        },
+        "botonDetener": {
+                "color":'#ed4722',
+                "opacidad": 1,
+                "sombra": {
+                        "color":'#f18585',
+                        "opacidad": 0.64
+                }
+        },
+        "etiquetaDeteniendo": {
+                "visible": true,
+                "color":'#36ad20',
+                "opacidad": 1,
+        },
+        "etiquetaDatosGanador": {
+                "color":'#0000FF',
+                "opacidad": 1,
+                "ancho": 35, /*por cada unidad subir el margen*/
+        "fuente": {
+                "familia":'monospace',
+                "tamano": 30,
+        },
+                "fondo": {
+                        "color":'#FFFFFF',
+                        "opacidad": 1
+                }
+        }, 
+        "etiquetaGanador": {
+                "visible": true,
+                "fuente": {
+                        "familia":'"Luckiest Guy", cursive',
+                        "tamano": 80,
+                },
+                "opacidad": 1,
+                "colorPrincipal": '#20b50e',
+                "colorSecundario": '#f17e14',
+                "sombra": {
+                        "color":'#000000',
+                        "opacidad": 0.4
+                }
+        }
+}
+}

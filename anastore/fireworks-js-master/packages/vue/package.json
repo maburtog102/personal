@@ -1,0 +1,54 @@
+{
+  "name": "@fireworks-js/vue",
+  "version": "2.10.0",
+  "type": "module",
+  "description": "A simple fireworks library!",
+  "homepage": "https://fireworks.js.org",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs.js",
+  "umd:main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    "require": "./dist/index.umd.js",
+    "default": "./dist/index.es.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crashmax-dev/fireworks-js.git"
+  },
+  "keywords": [
+    "vue",
+    "canvas",
+    "fireworks",
+    "animation"
+  ],
+  "author": {
+    "name": "Vitalij Ryndin",
+    "email": "sys@crashmax.ru",
+    "url": "https://crashmax.ru"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/crashmax-dev/fireworks-js/issues"
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "del-cli dist && vite build && pnpm types",
+    "types": "vue-tsc --declaration --emitDeclarationOnly",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "fireworks-js": "workspace:2.10.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "3.2.0",
+    "vue": "3.2.41",
+    "vue-tsc": "1.0.9"
+  },
+  "peerDependencies": {
+    "vue": ">=2.7.0"
+  }
+}
