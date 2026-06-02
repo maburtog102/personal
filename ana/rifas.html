@@ -136,7 +136,7 @@ async function cargarDatosNpoint() {
 
     try {
         // 1. Haces la petición a la URL
-        const respuesta = await fetch(url);
+        const respuesta =   await fetch(url, { cache: 'no-store' });
 
         // 2. Validas que la respuesta del servidor sea correcta (Status 200)
         if (!respuesta.ok) {
