@@ -123,108 +123,42 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
     // Participantes vendidos (numero: nombre)   ORGANIZADOR
-   const participantes = {
-  "0": "Guadalupe Aburto",
-  "1": "Alia Olivares",
-  "2": "Petronila Carballo",
-  "3": "",
-  "4": "Samantha Alvarado",
-  "5": "Fabiola CHavez",
-  "6": "David Aburto",
-  "7": "Daniela Contreras Carballo",
-  "8": "Maria Renata Mojica Aburto",
-  "9": "Liam Olivares",
-  "10": "Angelica Rosales",
-  "11": "Nataly Alondra Carballo Martinez",
-  "12": "Logan Aburto Chavez",
-  "13": "Rocío Quintanilla",
-  "14": "Marcelo Aburto Chavez",
-  "15": "Helen Noguera",
-  "16": "",
-  "17": "Lourdes Sequeira",
-  "18": "Jonathan Davila",
-  "19": "Maykel Aburto",
-  "20": "",
-  "21": "",
-  "22": "Juleydi Ortiz Solis",
-  "23": "",
-  "24": "Carlos Quintanilla",
-  "25": "Leonor Aburto",
-  "26": "Sharlott Mojica Aburto",
-  "27": "Leonor Aburto",
-  "28": "Petronila Carballo",
-  "29": "Maykel Aburto",
-  "30": "Mia Davila",
-  "31": "",
-  "32": "Danna Camila Campos",
-  "33": "",
-  "34": "Petronila Carballo",
-  "35": "",
-  "36": "",
-  "37": "",
-  "38": "Petronila Carballo",
-  "39": "",
-  "40": "",
-  "41": "",
-  "42": "Petronila Carballo",
-  "43": "",
-  "44": "",
-  "45": "",
-  "46": "Maykel Aburto",
-  "47": "",
-  "48": "",
-  "49": "",
-  "50": "Angel Stiven Aguirre",
-  "51": "",
-  "52": "Olga Matus",
-  "53": "",
-  "54": "",
-  "55": "Fabiola Campos Martinez",
-  "56": "Amparo Sandino",
-  "57": "",
-  "58": "",
-  "59": "",
-  "60": "",
-  "61": "",
-  "62": "Petronila Carballo",
-  "63": "Petronila Carballo",
-  "64": "Xaviera Carleth Contreras Carballo",
-  "65": "",
-  "66": "",
-  "67": "",
-  "68": "",
-  "69": "",
-  "70": "",
-  "71": "",
-  "72": "",
-  "73": "Maykel Aburto",
-  "74": "",
-  "75": "",
-  "76": "",
-  "77": "",
-  "78": "",
-  "79": "",
-  "80": "",
-  "81": "Petronila Carballo",
-  "82": "",
-  "83": "Maykel Aburto",
-  "84": "",
-  "85": "",
-  "86": "",
-  "87": "",
-  "88": "",
-  "89": "",
-  "90": "Petronila Carballo",
-  "91": "Amparo Sandino",
-  "92": "",
-  "93": "",
-  "94": "",
-  "95": "Erlo Alexander Chavez Martinez",
-  "96": "",
-  "97": "",
-  "98": "",
-  "99": "Petronila Carballo"
-};
+   const participantes ={};
+
+    $(document).ready(function(){
+      cargarDatosNpoint();
+    });
+
+    // Declaras la función como asíncrona
+async function cargarDatosNpoint() {
+    // Reemplaza esta URL con la que te generó npoint.io
+    const url = 'https://api.npoint.io/1f794bba3917d5f73cfb'; 
+
+    try {
+        // 1. Haces la petición a la URL
+        const respuesta = await fetch(url);
+
+        // 2. Validas que la respuesta del servidor sea correcta (Status 200)
+        if (!respuesta.ok) {
+            throw new Error(`Error en la petición: ${respuesta.status}`);
+        }
+
+        // 3. Extraes el body de la respuesta y lo conviertes a un objeto JSON
+        const misDatosJson = await respuesta.json();
+        participantes = misDatosJson;
+        // ¡Listo! Aquí 'misDatosJson' ya es tu variable con el objeto JS estructurado
+        console.log("Datos obtenidos:", misDatosJson);
+        
+        // Retornas la variable para usarla en el resto de tu código
+       initRifa();
+
+    } catch (error) {
+        console.error('Hubo un problema obteniendo el JSON:', error);
+        return null; // Retornas null o un arreglo vacío en caso de fallo
+    }
+}
+
+    function initRifa(){
 
     const grid = document.getElementById("grid");
     const mySwitch = document.getElementById('mySwitch');
@@ -288,6 +222,8 @@
     modal.onclick = (e) => {
       if (e.target === modal) modal.style.display = "none";
     };
+      
+    }
   </script>
 </body>
 </html>
