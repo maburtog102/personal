@@ -69,11 +69,40 @@
   <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
 
   <script>
-        const NGROK_BASE = "https://878490e8a980.ngrok-free.app/api/participantes"; // tu API ngrok
+        const NGROK_BASE = "https://c239-190-212-126-207.ngrok-free.app/api/participantes?rifa=1"; // tu API ngrok
     let rifaActual = "2";
     let participantes = {};
     let numeroActual = null;
 
+    async function cargarDatosNpoint() {
+    // Reemplaza esta URL con la que te generó npoint.io
+    const url = 'https://api.npoint.io/1f794bba3917d5f73cfb'; 
+
+    try {
+        // 1. Haces la petición a la URL
+        const respuesta =   await fetch(url, { cache: 'no-store' });
+
+        // 2. Validas que la respuesta del servidor sea correcta (Status 200)
+        if (!respuesta.ok) {
+            throw new Error(`Error en la petición: ${respuesta.status}`);
+        }
+
+        // 3. Extraes el body de la respuesta y lo conviertes a un objeto JSON
+        const misDatosJson = await respuesta.json();
+        participantes = misDatosJson;
+        // ¡Listo! Aquí 'misDatosJson' ya es tu variable con el objeto JS estructurado
+        console.log("Datos obtenidos:", misDatosJson);
+        
+        // Retornas la variable para usarla en el resto de tu código
+       renderGrid();
+
+    } catch (error) {
+        console.error('Hubo un problema obteniendo el JSON:', error);
+        return null; // Retornas null o un arreglo vacío en caso de fallo
+    }
+}
+
+    
     async function cargarParticipantes() {
       const res = await fetch(`${NGROK_BASE}?rifa=${rifaActual}`);
       participantes = await res.json();
