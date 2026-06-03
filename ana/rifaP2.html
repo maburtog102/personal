@@ -6,34 +6,102 @@
   <title>Lista de Participantes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin-right: 10px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
-    input:checked + .slider { background-color: #4CAF50; }
-    input:checked + .slider:before { transform: translateX(26px); }
-    body { background-color: #ffd4f8 !important; }
-    .numero { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .numero:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    span#lbl { font-weight: bold; color: blue; }
-    .modal { display: none; }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      margin-right: 10px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    body {
+      background-color: #c3d0fd !important;
+    }
+    .numero {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .numero:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    span#lbl {
+      font-weight: bold;
+      color: blue;
+    }
+    /* Modal estilos */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body class="bg-gray-200 min-h-screen flex flex-col items-center p-6">
-<input id="clave" type="checkbox" style="
-    float: left;
-    position: absolute;
-    left: 4px;
-    top: 5px;
-    opacity: 0.2;
-">
+
   <!-- Texto promocional -->
   <p class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 text-center">
-    Grandiosa rifa de un premio de $50 en apoyo a la candidata a reina del 3 grado "Academia Santa María - Jinotepe", a efectuarse el <span class="font-bold">14 de octubre</span> 
-    con los últimos dos dígitos de la Lotería Nacional de Nicaragua
+   👔 ¡Celebremos a Papá con un regalito en efectivo! 💵
+Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes ganar $20 Dólares exactitos para celebrar.
+🎟️ Valor de la acción: ¡Solo C$ 20 pesitos!
+🗓️ Sorteo: Martes 23 de junio (Jugamos seguro con la terminación de la Lotería Nacional).
+¡Anímate, aparta tu número de la suerte ✨
   </p>
 
-  <!-- Encabezado -->
+  <!-- Encabezado con miniatura del premio -->
   <div class="flex items-center gap-3 mb-6">
     <img src="img/mini.png" alt="Premio" class="h-12 w-12 object-cover cursor-pointer rounded shadow" id="thumbnail">
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Lista de Participantes</h1>
@@ -46,124 +114,91 @@
     </label>
   </div>
 
-  <!-- Modal premio -->
-  <div id="modalPremio" class="fixed inset-0 hidden bg-black bg-opacity-70 justify-center items-center z-50">
-    <span class="absolute top-5 right-8 text-white text-3xl cursor-pointer" id="closePremio">&times;</span>
-    <img src="img/premioB.png" alt="Premio Grande" class="max-w-[90%] max-h-[80%] rounded-xl shadow-2xl">
-  </div>
-
-  <!-- Modal edición -->
-  <div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-50 justify-center items-center z-50">
-    <div class="bg-white rounded-xl shadow-lg p-6 w-96">
-      <h2 class="text-xl font-bold mb-4">Editar participante</h2>
-      <p class="mb-2 text-gray-600">Número: <span id="editNumero" class="font-bold"></span></p>
-      <input type="text" id="editNombre" class="w-full p-2 border rounded-lg mb-4" placeholder="Nombre del participante">
-      <div class="flex justify-end gap-2">
-        <button id="cancelarBtn" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
-        <button id="guardarBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg">Guardar</button>
-      </div>
-    </div>
+  <!-- Modal preview -->
+  <div id="modal" class="modal">
+    <span class="modal-close">&times;</span>
+    <img src="img/Banner.png" alt="Premio Grande">
   </div>
   
-  <!-- Grilla -->
+  <!-- Grilla adaptable -->
   <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
-        const NGROK_BASE = "https://c239-190-212-126-207.ngrok-free.app/api/participantes?rifa=1"; // tu API ngrok
-    let rifaActual = "2";
+    
+    const NGROK_BASE = "https://c239-190-212-126-207.ngrok-free.app/api/participantes"; 
+    
     let participantes = {};
     let numeroActual = null;
+    let rifaActual = "1"; // <-- ¡Faltaba declarar esta variable!
 
-    async function cargarDatosNpoint() {
-    // Reemplaza esta URL con la que te generó npoint.io
-    const url = 'https://api.npoint.io/1f794bba3917d5f73cfb'; 
-
-    try {
-        // 1. Haces la petición a la URL
-        const respuesta =   await fetch(url, { cache: 'no-store' });
-
-        // 2. Validas que la respuesta del servidor sea correcta (Status 200)
-        if (!respuesta.ok) {
-            throw new Error(`Error en la petición: ${respuesta.status}`);
-        }
-
-        // 3. Extraes el body de la respuesta y lo conviertes a un objeto JSON
-        const misDatosJson = await respuesta.json();
-        participantes = misDatosJson;
-        // ¡Listo! Aquí 'misDatosJson' ya es tu variable con el objeto JS estructurado
-        console.log("Datos obtenidos:", misDatosJson);
-        
-        // Retornas la variable para usarla en el resto de tu código
-       renderGrid();
-
-    } catch (error) {
-        console.error('Hubo un problema obteniendo el JSON:', error);
-        return null; // Retornas null o un arreglo vacío en caso de fallo
-    }
-}
-
-    
     async function cargarParticipantes() {
-      const res = await fetch(`${NGROK_BASE}?rifa=${rifaActual}`);
-      participantes = await res.json();
-      renderGrid();
+      try {
+        // Se añade el header ngrok-skip-browser-warning para evitar la pantalla de bloqueo de ngrok
+        const res = await fetch(`${NGROK_BASE}?rifa=${rifaActual}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true" 
+          }
+        });
+        participantes = await res.json();
+        renderGrid();
+      } catch (error) {
+        console.error("Error al cargar participantes:", error);
+      }
     }
 
    function renderGrid() {
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
 
-  // Verificar si hay participantes válidos
-  const tieneDatos = participantes &&  Object.keys(participantes).length > 0;
-  if (!tieneDatos) {
-    const mensaje = document.createElement("div");
-    mensaje.textContent = "No se pudieron obtener los números";
-    mensaje.classList.add("col-span-full", "text-center", "text-red-600", "font-bold", "text-lg", "p-4");
-    grid.appendChild(mensaje);
-    return;
-  }
-
-  for (let i = 0; i <= 99; i++) {
-    const container = document.createElement("div");
-    container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur");
-
-    const numTexto = i.toString().padStart(2,"0");
-    const numberBox = document.createElement("div");
-    numberBox.textContent = numTexto;
-    numberBox.classList.add("h-14","w-14","flex","items-center","justify-center","rounded-xl","font-bold","text-lg");
-
-    const label = document.createElement("span");
-    label.classList.add("mt-1","text-[10px]","sm:text-xs","font-medium","text-center");
-
-    if (participantes[i]) {
-      numberBox.classList.add("bg-blue-500","text-white","line-through");
-      container.setAttribute("title","Número vendido");
-      label.textContent = participantes[i];
-      label.classList.add("text-gray-800");
-    } else {
-      numberBox.classList.add("bg-gray-400","text-white");
-      container.setAttribute("title","Número disponible");
-      label.textContent = "Disponible";
-      label.classList.add("text-gray-600");
-    }
-
-    // triple click (PC) o 4 taps (móvil)
-    let clickCount = 0;
-    container.addEventListener("click", () => {
-      clickCount++;
-      setTimeout(() => { clickCount = 0; }, 600);
-      if (document.getElementById("clave").checked && (clickCount === 3 || clickCount === 4)) {
-        abrirModalEdicion(i);
-        clickCount = 0;
+      const tieneDatos = participantes &&  Object.keys(participantes).length > 0;
+      if (!tieneDatos) {
+        const mensaje = document.createElement("div");
+        mensaje.textContent = "No se pudieron obtener los números";
+        mensaje.classList.add("col-span-full", "text-center", "text-red-600", "font-bold", "text-lg", "p-4");
+        grid.appendChild(mensaje);
+        return;
       }
-    });
 
-    container.appendChild(numberBox);
-    container.appendChild(label);
-    grid.appendChild(container);
-  }
-}
+      for (let i = 0; i <= 99; i++) {
+        const container = document.createElement("div");
+        container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur");
 
+        const numTexto = i.toString().padStart(2,"0");
+        const numberBox = document.createElement("div");
+        numberBox.textContent = numTexto;
+        numberBox.classList.add("h-14","w-14","flex","items-center","justify-center","rounded-xl","font-bold","text-lg");
+
+        const label = document.createElement("span");
+        label.classList.add("mt-1","text-[10px]","sm:text-xs","font-medium","text-center");
+
+        if (participantes[i] && participantes[i].trim() !== "") {
+          numberBox.classList.add("bg-blue-500","text-white","line-through");
+          container.setAttribute("title","Número vendido");
+          label.textContent = participantes[i];
+          label.classList.add("text-gray-800");
+        } else {
+          numberBox.classList.add("bg-gray-400","text-white");
+          container.setAttribute("title","Número disponible");
+          label.textContent = "Disponible";
+          label.classList.add("text-gray-600");
+        }
+
+        let clickCount = 0;
+        container.addEventListener("click", () => {
+          clickCount++;
+          setTimeout(() => { clickCount = 0; }, 600);
+          if (document.getElementById("clave").checked && (clickCount === 3 || clickCount === 4)) {
+            abrirModalEdicion(i);
+            clickCount = 0;
+          }
+        });
+
+        container.appendChild(numberBox);
+        container.appendChild(label);
+        grid.appendChild(container);
+      }
+    }
 
     function abrirModalEdicion(id) {
       numeroActual = id;
@@ -174,14 +209,24 @@
 
     async function guardarEdicion() {
       const nuevo = document.getElementById("editNombre").value.trim();
-      //if(nuevo === "") return alert("El nombre no puede estar vacío");
-      await fetch(`${NGROK_BASE}/${numeroActual}?rifa=${rifaActual}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre: nuevo })
-      });
-      document.getElementById("editModal").style.display = "none";
-      await cargarParticipantes();
+      
+      try {
+        // Añadimos correctamente los headers para enviar el JSON
+        await fetch(`${NGROK_BASE}/${numeroActual}?rifa=${rifaActual}`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true" 
+          },
+          body: JSON.stringify({ nombre: nuevo })
+        });
+        
+        document.getElementById("editModal").style.display = "none";
+        await cargarParticipantes(); // Recargar la lista tras editar
+      } catch (error) {
+        console.error("Error al guardar:", error);
+        alert("Hubo un error al guardar los cambios.");
+      }
     }
 
     // Botones modal edición
