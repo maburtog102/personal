@@ -6,92 +6,23 @@
   <title>Lista de Participantes</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-      margin-right: 10px;
-    }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: #4CAF50;
-    }
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-    body {
-      background-color: #c3d0fd !important;
-    }
-    .numero {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .numero:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    span#lbl {
-      font-weight: bold;
-      color: blue;
-    }
-    /* Modal estilos */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 50;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal img {
-      max-width: 90%;
-      max-height: 80%;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    }
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 30px;
-      font-weight: bold;
-      color: white;
-      cursor: pointer;
-    }
+    .switch { position: relative; display: inline-block; width: 60px; height: 34px; margin-right: 10px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: 0.4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #4CAF50; }
+    input:checked + .slider:before { transform: translateX(26px); }
+    body { background-color: #c3d0fd !important; }
+    .numero { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
+    .numero:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    span#lbl { font-weight: bold; color: blue; }
+    .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
+    .modal img { max-width: 90%; max-height: 80%; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.6); }
+    .modal-close { position: absolute; top: 20px; right: 30px; font-size: 30px; font-weight: bold; color: white; cursor: pointer; }
   </style>
 </head>
-<body class="bg-gray-200 min-h-screen flex flex-col items-center p-6 relative pb-20">
-
+<body class="bg-gray-200 min-h-screen flex flex-col items-center p-6 relative pb-24">
+  
   <p class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 text-center">
     👔 ¡Celebremos a Papá con un regalito en efectivo! 💵<br>
     Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes ganar $20 Dólares exactitos para celebrar.<br>
@@ -117,14 +48,26 @@
     <img src="img/Banner.png" alt="Premio Grande">
   </div>
   
-  <div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-50 justify-center items-center z-50">
+  <div id="authModal" class="fixed inset-0 hidden bg-black bg-opacity-60 justify-center items-center z-50">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-80 text-center">
+      <h2 class="text-xl font-bold mb-2">Autorización</h2>
+      <p class="text-sm text-gray-600 mb-4">Ingresa el PIN para administrar.</p>
+      <input type="password" id="authPin" class="w-full p-2 border rounded-lg mb-4 text-center tracking-widest text-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="•••••">
+      <div class="flex justify-center gap-2">
+        <button id="cancelAuthBtn" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg transition-colors">Cancelar</button>
+        <button id="submitAuthBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Ingresar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-60 justify-center items-center z-50">
     <div class="bg-white rounded-xl shadow-lg p-6 w-96 relative">
       <h2 class="text-xl font-bold mb-4">Editar participante</h2>
       <p class="mb-2 text-gray-600">Número: <span id="editNumero" class="font-bold text-blue-600 text-lg"></span></p>
       
       <div class="relative w-full mb-4">
         <input type="text" id="editNombre" class="w-full p-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nombre del participante">
-        <button id="clearInputBtn" class="absolute right-2 top-2 text-gray-400 hover:text-red-500" title="Borrar nombre para liberar número">
+        <button id="clearInputBtn" class="absolute right-2 top-2 text-gray-400 hover:text-red-500" title="Borrar nombre">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -140,7 +83,7 @@
 
   <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
 
-  <button id="loginBtn" class="absolute bottom-6 right-6 p-3 bg-gray-800 text-white rounded-full shadow-lg hover:bg-gray-700 transition-transform hover:scale-110" title="Administrar Rifa">
+  <button id="openAuthBtn" class="fixed bottom-6 right-6 p-4 bg-gray-800 text-white rounded-full shadow-lg hover:bg-gray-700 transition-transform hover:scale-110" title="Administrar">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
     </svg>
@@ -148,17 +91,15 @@
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
-    const NGROK_BASE = "https://c239-190-212-126-207.ngrok-free.app/api/participantes"; 
+    const NGROK_BASE = "https://c239-190-212-126-207.ngrok-free.app/api"; 
     
     let participantes = {};
     let numeroActual = null;
 
     async function cargarParticipantes() {
       try {
-        const res = await fetch(NGROK_BASE, {
-          headers: {
-            "ngrok-skip-browser-warning": "true" 
-          }
+        const res = await fetch(`${NGROK_BASE}/participantes`, {
+          headers: { "ngrok-skip-browser-warning": "true" }
         });
         participantes = await res.json();
         renderGrid();
@@ -209,13 +150,12 @@
           clickCount++;
           setTimeout(() => { clickCount = 0; }, 600);
           
-          // Lógica de Triple Click verificando el GUID
           if (clickCount === 3 || clickCount === 4) {
             const token = localStorage.getItem("rifa_auth_guid");
             if (token) {
               abrirModalEdicion(i);
             } else {
-              console.log("Modo edición bloqueado: No hay autorización local.");
+              alert("Debes autorizarte primero usando el candado.");
             }
             clickCount = 0;
           }
@@ -235,7 +175,7 @@
       document.getElementById("editNombre").focus();
     }
 
-    // Limpiar input con el botón nuevo
+    // Limpiar input
     document.getElementById("clearInputBtn").addEventListener("click", () => {
       document.getElementById("editNombre").value = "";
       document.getElementById("editNombre").focus();
@@ -246,43 +186,50 @@
       const token = localStorage.getItem("rifa_auth_guid");
 
       if (!token) {
-        alert("Tu sesión ha expirado o no estás autorizado.");
+        alert("Tu sesión ha expirado.");
         document.getElementById("editModal").style.display = "none";
         return;
       }
       
       try {
-        const res = await fetch(`${NGROK_BASE}/${numeroActual}`, {
+        const res = await fetch(`${NGROK_BASE}/participantes/${numeroActual}`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true" 
           },
-          // Enviamos el nombre y el token de validación
           body: JSON.stringify({ nombre: nuevo, guid: token })
         });
         
         const data = await res.json();
-
         if (res.ok && data.success) {
           document.getElementById("editModal").style.display = "none";
           await cargarParticipantes();
         } else {
-          alert("Error de autorización: El servidor rechazó los cambios.");
-          // Si el servidor lo rechaza, posiblemente el GUID ya no sirve, limpiamos:
+          alert("Error: " + (data.error || "No autorizado."));
           localStorage.removeItem("rifa_auth_guid");
         }
-
       } catch (error) {
-        console.error("Error al guardar:", error);
-        alert("Hubo un error al guardar los cambios.");
+        alert("Hubo un error al comunicar con el servidor.");
       }
     }
 
-    // Login logic
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const clave = prompt("Ingresa el código de administrador:");
-      if (!clave) return;
+    // ----- Lógica del Login -----
+    const authModal = document.getElementById("authModal");
+    
+    document.getElementById("openAuthBtn").addEventListener("click", () => {
+      document.getElementById("authPin").value = "";
+      authModal.style.display = "flex";
+      document.getElementById("authPin").focus();
+    });
+
+    document.getElementById("cancelAuthBtn").addEventListener("click", () => {
+      authModal.style.display = "none";
+    });
+
+    document.getElementById("submitAuthBtn").addEventListener("click", async () => {
+      const pin = document.getElementById("authPin").value.trim();
+      if (!pin) return;
 
       try {
         const res = await fetch(`${NGROK_BASE}/login`, {
@@ -291,19 +238,20 @@
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true" 
           },
-          body: JSON.stringify({ clave: clave })
+          body: JSON.stringify({ pin: pin })
         });
 
         const data = await res.json();
         if (res.ok && data.success && data.guid) {
           localStorage.setItem("rifa_auth_guid", data.guid);
-          alert("¡Acceso concedido! Ya puedes administrar la rifa dando 3 clics rápidos sobre los números.");
+          alert("¡Autorizado con éxito!");
+          authModal.style.display = "none";
         } else {
-          alert("Código incorrecto.");
+          alert("PIN incorrecto.");
+          document.getElementById("authPin").value = "";
         }
       } catch (error) {
-        console.error("Error de login:", error);
-        alert("No se pudo conectar con el servidor para validar el código.");
+        alert("Error de conexión al validar el PIN.");
       }
     });
 
@@ -313,7 +261,7 @@
       document.getElementById("editModal").style.display = "none";
     });
 
-    // Switch toggle para filtrar
+    // Filtros
     document.getElementById("mySwitch").addEventListener("change", function() {
       if (this.checked) {
         document.getElementById("lbl").textContent = "Disponibles";
@@ -324,22 +272,14 @@
       }
     });
 
-    // Lógica del modal de premio
+    // Modal Premio
     const modalPremio = document.getElementById("modal");
+    document.getElementById("thumbnail").onclick = () => modalPremio.style.display = "flex";
+    document.getElementById("closePremioBtn").onclick = () => modalPremio.style.display = "none";
+    modalPremio.onclick = (e) => { if (e.target.id === "modal") modalPremio.style.display = "none"; };
+            
     
-    document.getElementById("thumbnail").onclick = () => {
-      modalPremio.style.display = "flex";
-    };
-    document.getElementById("closePremioBtn").onclick = () => {
-      modalPremio.style.display = "none";
-    };
-    modalPremio.onclick = (e) => {
-      if (e.target.id === "modal") {
-        modalPremio.style.display = "none";
-      }
-    };
-
-    // Inicializar
+    modalPremio.style.display = "flex";
     cargarParticipantes();
   </script>
 </body>
