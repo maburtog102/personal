@@ -90,9 +90,7 @@
     }
   </style>
 </head>
-<body class="bg-gray-200 min-h-screen flex flex-col items-center p-6">
-  
-  <input id="clave" type="checkbox" style="float: left; position: absolute; left: 4px; top: 5px; opacity: 0.2;">
+<body class="bg-gray-200 min-h-screen flex flex-col items-center p-6 relative pb-20">
 
   <p class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 text-center">
     👔 ¡Celebremos a Papá con un regalito en efectivo! 💵<br>
@@ -120,18 +118,33 @@
   </div>
   
   <div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-50 justify-center items-center z-50">
-    <div class="bg-white rounded-xl shadow-lg p-6 w-96">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96 relative">
       <h2 class="text-xl font-bold mb-4">Editar participante</h2>
-      <p class="mb-2 text-gray-600">Número: <span id="editNumero" class="font-bold"></span></p>
-      <input type="text" id="editNombre" class="w-full p-2 border rounded-lg mb-4" placeholder="Nombre del participante">
+      <p class="mb-2 text-gray-600">Número: <span id="editNumero" class="font-bold text-blue-600 text-lg"></span></p>
+      
+      <div class="relative w-full mb-4">
+        <input type="text" id="editNombre" class="w-full p-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Nombre del participante">
+        <button id="clearInputBtn" class="absolute right-2 top-2 text-gray-400 hover:text-red-500" title="Borrar nombre para liberar número">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+      </div>
+
       <div class="flex justify-end gap-2">
-        <button id="cancelarBtn" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
-        <button id="guardarBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg">Guardar</button>
+        <button id="cancelarBtn" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg transition-colors">Cancelar</button>
+        <button id="guardarBtn" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors">Guardar</button>
       </div>
     </div>
   </div>
 
   <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
+
+  <button id="loginBtn" class="absolute bottom-6 right-6 p-3 bg-gray-800 text-white rounded-full shadow-lg hover:bg-gray-700 transition-transform hover:scale-110" title="Administrar Rifa">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+    </svg>
+  </button>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
@@ -142,7 +155,6 @@
 
     async function cargarParticipantes() {
       try {
-        // Petición limpia sin parámetros adicionales
         const res = await fetch(NGROK_BASE, {
           headers: {
             "ngrok-skip-browser-warning": "true" 
@@ -159,7 +171,7 @@
       const grid = document.getElementById("grid");
       grid.innerHTML = "";
 
-      const tieneDatos = participantes &&  Object.keys(participantes).length > 0;
+      const tieneDatos = participantes && Object.keys(participantes).length > 0;
       if (!tieneDatos) {
         const mensaje = document.createElement("div");
         mensaje.textContent = "No se pudieron obtener los números";
@@ -196,8 +208,15 @@
         container.addEventListener("click", () => {
           clickCount++;
           setTimeout(() => { clickCount = 0; }, 600);
-          if (document.getElementById("clave").checked && (clickCount === 3 || clickCount === 4)) {
-            abrirModalEdicion(i);
+          
+          // Lógica de Triple Click verificando el GUID
+          if (clickCount === 3 || clickCount === 4) {
+            const token = localStorage.getItem("rifa_auth_guid");
+            if (token) {
+              abrirModalEdicion(i);
+            } else {
+              console.log("Modo edición bloqueado: No hay autorización local.");
+            }
             clickCount = 0;
           }
         });
@@ -213,29 +232,80 @@
       document.getElementById("editNumero").textContent = id.toString().padStart(2,"0");
       document.getElementById("editNombre").value = participantes[id] || "";
       document.getElementById("editModal").style.display = "flex";
+      document.getElementById("editNombre").focus();
     }
+
+    // Limpiar input con el botón nuevo
+    document.getElementById("clearInputBtn").addEventListener("click", () => {
+      document.getElementById("editNombre").value = "";
+      document.getElementById("editNombre").focus();
+    });
 
     async function guardarEdicion() {
       const nuevo = document.getElementById("editNombre").value.trim();
+      const token = localStorage.getItem("rifa_auth_guid");
+
+      if (!token) {
+        alert("Tu sesión ha expirado o no estás autorizado.");
+        document.getElementById("editModal").style.display = "none";
+        return;
+      }
       
       try {
-        // Petición POST limpia apuntando directo al ID del número
-        await fetch(`${NGROK_BASE}/${numeroActual}`, {
+        const res = await fetch(`${NGROK_BASE}/${numeroActual}`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true" 
           },
-          body: JSON.stringify({ nombre: nuevo })
+          // Enviamos el nombre y el token de validación
+          body: JSON.stringify({ nombre: nuevo, guid: token })
         });
         
-        document.getElementById("editModal").style.display = "none";
-        await cargarParticipantes();
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          document.getElementById("editModal").style.display = "none";
+          await cargarParticipantes();
+        } else {
+          alert("Error de autorización: El servidor rechazó los cambios.");
+          // Si el servidor lo rechaza, posiblemente el GUID ya no sirve, limpiamos:
+          localStorage.removeItem("rifa_auth_guid");
+        }
+
       } catch (error) {
         console.error("Error al guardar:", error);
         alert("Hubo un error al guardar los cambios.");
       }
     }
+
+    // Login logic
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const clave = prompt("Ingresa el código de administrador:");
+      if (!clave) return;
+
+      try {
+        const res = await fetch(`${NGROK_BASE}/login`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true" 
+          },
+          body: JSON.stringify({ clave: clave })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success && data.guid) {
+          localStorage.setItem("rifa_auth_guid", data.guid);
+          alert("¡Acceso concedido! Ya puedes administrar la rifa dando 3 clics rápidos sobre los números.");
+        } else {
+          alert("Código incorrecto.");
+        }
+      } catch (error) {
+        console.error("Error de login:", error);
+        alert("No se pudo conectar con el servidor para validar el código.");
+      }
+    });
 
     // Botones modal edición
     document.getElementById("guardarBtn").addEventListener("click", guardarEdicion);
@@ -254,7 +324,7 @@
       }
     });
 
-    // Lógica del modal de premio actualizada a tus nuevos IDs
+    // Lógica del modal de premio
     const modalPremio = document.getElementById("modal");
     
     document.getElementById("thumbnail").onclick = () => {
