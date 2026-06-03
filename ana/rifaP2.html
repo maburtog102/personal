@@ -91,17 +91,17 @@
   </style>
 </head>
 <body class="bg-gray-200 min-h-screen flex flex-col items-center p-6">
+  
+  <input id="clave" type="checkbox" style="float: left; position: absolute; left: 4px; top: 5px; opacity: 0.2;">
 
-  <!-- Texto promocional -->
   <p class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 text-center">
-   👔 ¡Celebremos a Papá con un regalito en efectivo! 💵
-Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes ganar $20 Dólares exactitos para celebrar.
-🎟️ Valor de la acción: ¡Solo C$ 20 pesitos!
-🗓️ Sorteo: Martes 23 de junio (Jugamos seguro con la terminación de la Lotería Nacional).
-¡Anímate, aparta tu número de la suerte ✨
+    👔 ¡Celebremos a Papá con un regalito en efectivo! 💵<br>
+    Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes ganar $20 Dólares exactitos para celebrar.<br>
+    🎟️ Valor de la acción: ¡Solo C$ 20 pesitos!<br>
+    🗓️ Sorteo: Martes 23 de junio (Jugamos seguro con la terminación de la Lotería Nacional).<br>
+    ¡Anímate, aparta tu número de la suerte ✨
   </p>
 
-  <!-- Encabezado con miniatura del premio -->
   <div class="flex items-center gap-3 mb-6">
     <img src="img/mini.png" alt="Premio" class="h-12 w-12 object-cover cursor-pointer rounded shadow" id="thumbnail">
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Lista de Participantes</h1>
@@ -114,28 +114,36 @@ Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes gana
     </label>
   </div>
 
-  <!-- Modal preview -->
   <div id="modal" class="modal">
-    <span class="modal-close">&times;</span>
+    <span class="modal-close" id="closePremioBtn">&times;</span>
     <img src="img/Banner.png" alt="Premio Grande">
   </div>
   
-  <!-- Grilla adaptable -->
+  <div id="editModal" class="fixed inset-0 hidden bg-black bg-opacity-50 justify-center items-center z-50">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96">
+      <h2 class="text-xl font-bold mb-4">Editar participante</h2>
+      <p class="mb-2 text-gray-600">Número: <span id="editNumero" class="font-bold"></span></p>
+      <input type="text" id="editNombre" class="w-full p-2 border rounded-lg mb-4" placeholder="Nombre del participante">
+      <div class="flex justify-end gap-2">
+        <button id="cancelarBtn" class="px-4 py-2 bg-gray-300 rounded-lg">Cancelar</button>
+        <button id="guardarBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg">Guardar</button>
+      </div>
+    </div>
+  </div>
+
   <div id="grid" class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-4 w-full max-w-6xl"></div>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
-    
     const NGROK_BASE = "https://c239-190-212-126-207.ngrok-free.app/api/participantes"; 
     
     let participantes = {};
     let numeroActual = null;
-    let rifaActual = "1"; // <-- ¡Faltaba declarar esta variable!
 
     async function cargarParticipantes() {
       try {
-        // Se añade el header ngrok-skip-browser-warning para evitar la pantalla de bloqueo de ngrok
-        const res = await fetch(`${NGROK_BASE}?rifa=${rifaActual}`, {
+        // Petición limpia sin parámetros adicionales
+        const res = await fetch(NGROK_BASE, {
           headers: {
             "ngrok-skip-browser-warning": "true" 
           }
@@ -211,8 +219,8 @@ Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes gana
       const nuevo = document.getElementById("editNombre").value.trim();
       
       try {
-        // Añadimos correctamente los headers para enviar el JSON
-        await fetch(`${NGROK_BASE}/${numeroActual}?rifa=${rifaActual}`, {
+        // Petición POST limpia apuntando directo al ID del número
+        await fetch(`${NGROK_BASE}/${numeroActual}`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
@@ -222,7 +230,7 @@ Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes gana
         });
         
         document.getElementById("editModal").style.display = "none";
-        await cargarParticipantes(); // Recargar la lista tras editar
+        await cargarParticipantes();
       } catch (error) {
         console.error("Error al guardar:", error);
         alert("Hubo un error al guardar los cambios.");
@@ -235,7 +243,7 @@ Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes gana
       document.getElementById("editModal").style.display = "none";
     });
 
-    // Switch toggle
+    // Switch toggle para filtrar
     document.getElementById("mySwitch").addEventListener("change", function() {
       if (this.checked) {
         document.getElementById("lbl").textContent = "Disponibles";
@@ -246,18 +254,22 @@ Estamos organizando una grandiosa rifa por el Mes del Padre donde te puedes gana
       }
     });
 
-    // Modal premio
+    // Lógica del modal de premio actualizada a tus nuevos IDs
+    const modalPremio = document.getElementById("modal");
+    
     document.getElementById("thumbnail").onclick = () => {
-      document.getElementById("modalPremio").style.display = "flex";
+      modalPremio.style.display = "flex";
     };
-    document.getElementById("closePremio").onclick = () => {
-      document.getElementById("modalPremio").style.display = "none";
+    document.getElementById("closePremioBtn").onclick = () => {
+      modalPremio.style.display = "none";
     };
-    document.getElementById("modalPremio").onclick = (e) => {
-      if (e.target.id === "modalPremio") document.getElementById("modalPremio").style.display = "none";
+    modalPremio.onclick = (e) => {
+      if (e.target.id === "modal") {
+        modalPremio.style.display = "none";
+      }
     };
 
-    // Inicial
+    // Inicializar
     cargarParticipantes();
   </script>
 </body>
