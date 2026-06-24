@@ -93,7 +93,108 @@
   <script>
     const NGROK_BASE = "https://160e-186-77-206-15.ngrok-free.app/api"; 
     
-    let participantes = {};
+    let participantes = {
+  "0": "Dariel Chávez Aburto",
+  "1": "Reynaldo Oporta",
+  "2": "Darling Vado",
+  "3": "Carleth Contreras",
+  "4": "Fátima Martínez",
+  "5": "Dulce Gaitán",
+  "6": "Ingrid López",
+  "7": "Olga Matus",
+  "8": "Nathaly Carballo",
+  "9": "Fátima Martínez",
+  "10": "Ernesto Brenes",
+  "11": "Marcelo Chávez Aburto",
+  "12": "Saleska Guido",
+  "13": "Dulce Gaitán",
+  "14": "Katya Sánchez",
+  "15": "Danna Campos",
+  "16": "Nazareth Oporta",
+  "17": "Samantha Alvarado",
+  "18": "Elieth Ampie",
+  "19": "Daniela Contreras",
+  "20": "Junni Campos",
+  "21": "Ernesto Brenes",
+  "22": "Elieth Ampie",
+  "23": "Marcelo Chávez Aburto",
+  "24": "Ingrid Lara Aburto",
+  "25": "Dariel Chávez Aburto",
+  "26": "Pastora Miranda",
+  "27": "Carmen Guzmán",
+  "28": "Kendrick Granera",
+  "29": "Socorro Ruiz",
+  "30": "Saleska Guido",
+  "31": "Ernesto Brenes",
+  "32": "Carmen Guzmán",
+  "33": "Miguel Aburto",
+  "34": "Junni Campos",
+  "35": "Sofia López",
+  "36": "Guadalupe Aburto",
+  "37": "Sonia López",
+  "38": "Carmen Meza",
+  "39": "Angelica López",
+  "40": "Kevin Aburto",
+  "41": "Estefany Jiménez",
+  "42": "Dulce Gaitán",
+  "43": "Kevin Aburto",
+  "44": "Madeline López",
+  "45": "Sofia López",
+  "46": "Reynaldo Oporta",
+  "47": "Aurelio López",
+  "48": "Carmen Meza",
+  "49": "Javier Carballo",
+  "50": "Fabiola Campos",
+  "51": "Angel Campos",
+  "52": "Katya Sánchez",
+  "53": "Petronila Carballo",
+  "54": "Kevin Aburto",
+  "55": "Fabiola Campos",
+  "56": "Sarahí Almanza",
+  "57": "Indiana Narváez",
+  "58": "Mayling Barillas",
+  "59": "Indiana Narváez",
+  "60": "Katherine Aburto",
+  "61": "Petronila Carballo",
+  "62": "Dulce Gaitán",
+  "63": "Lupita López",
+  "64": "Estefany Jiménez",
+  "65": "Lidia Gutierrez",
+  "66": "Darwin Aburto",
+  "67": "Kevin Aburto",
+  "68": "Marina Martinez",
+  "69": "Maykel Aburto",
+  "70": "Katherine Aburto",
+  "71": "Luis López",
+  "72": "Petronila Carballo",
+  "73": "Petronila Carballo",
+  "74": "Petronila Carballo",
+  "75": "Nazareth Oporta",
+  "76": "Carmen Guzmán",
+  "77": "Aurelio López",
+  "78": "Dulce Gaitán",
+  "79": "Fátima Martínez",
+  "80": "Indiana Narváez",
+  "81": "Estefany Jiménez",
+  "82": "Madeline López",
+  "83": "Guadalupe Aburto",
+  "84": "Gonzalo Narváez",
+  "85": "Indiana Narváez",
+  "86": "Danna Camila Campos",
+  "87": "Cristhian López",
+  "88": "Kevin Aburto",
+  "89": "Indiana Narváez",
+  "90": "Ingrid López",
+  "91": "Mayling Barillas",
+  "92": "Lourdes Soza",
+  "93": "Gonzalo Narváez",
+  "94": "Socorro Ruiz",
+  "95": "Lidia Gutierrez",
+  "96": "Estiven Campos",
+  "97": "Socorro Ruiz",
+  "98": "Lidia Gutierrez",
+  "99": "Jorge López"
+};
     let numeroActual = null;
 
     async function cargarParticipantes() {
@@ -123,7 +224,7 @@
 
       for (let i = 0; i <= 99; i++) {
         const container = document.createElement("div");
-        container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur");
+        container.classList.add("flex","flex-col","items-center","justify-center","p-2","rounded-xl","numero","bg-white/70","backdrop-blur", "numero_" + i);
 
         const numTexto = i.toString().padStart(2,"0");
         const numberBox = document.createElement("div");
@@ -280,7 +381,8 @@
             
     
     modalPremio.style.display = "flex";
-    cargarParticipantes();
+   // cargarParticipantes();
+     renderGrid(); //quitar cuadno use el api
   </script>
 </body>
 </html>
